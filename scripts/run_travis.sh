@@ -10,7 +10,7 @@ else
 fi
 source ./venv/bin/activate
 ret=0
-${TIMEOUT_CMD[@]} py.test -vvv --cov=snowflake.connector test || ret=$?
+${TIMEOUT_CMD[@]} py.test -vvv --cov=snowflake.connector --cov-report=xml:python_connector_${TRAVIS_PYTHON_VERSION}_coverage.xml test || ret=$?
 
 # TIMEOUT or SUCCESS
 [ $ret != 124 -a $ret != 0 ] && exit 1 || exit 0
