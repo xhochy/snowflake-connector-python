@@ -17,13 +17,12 @@ if [ -n "$SNOWFLAKE_AZURE" ]; then
   echo "Running Azure tests only..."
   ${TIMEOUT_CMD[@]} py.test -vvv --cov=snowflake.connector \
   --cov-report=xml:python_connector_${TRAVIS_PYTHON_VERSION}_coverage.xml \
-  --cov-config "${THIS_DIR}/../tox.ini" \
   -m azure test || ret=$?
 else
   echo "Running regular tests..."
   ${TIMEOUT_CMD[@]} py.test -vvv --cov=snowflake.connector \
   --cov-report=xml:python_connector_${TRAVIS_PYTHON_VERSION}_coverage.xml \
-  --cov-config "${THIS_DIR}/../tox.ini" test || ret=$?
+  test || ret=$?
 fi
 
 # TIMEOUT or SUCCESS
