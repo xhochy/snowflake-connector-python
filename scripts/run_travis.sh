@@ -3,6 +3,7 @@
 # Run Travis Tests
 #
 
+# shellcheck disable=SC2034
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 set -o pipefail
@@ -15,11 +16,19 @@ source ./venv/bin/activate
 ret=0
 if [ -n "$SNOWFLAKE_AZURE" ]; then
   echo "Running Azure tests only..."
+  # shellcheck disable=SC2068
   ${TIMEOUT_CMD[@]} py.test -vvv --cov=snowflake.connector \
   --cov-report=xml:python_connector_${TRAVIS_PYTHON_VERSION}_coverage.xml \
-  -m azure test || ret=$?
+  -m "putget and not slow" test || ret=$?
+elif [ -n "$SNOWFLAKE_GCP" ]; then
+  echo "Running GCP tests only..."
+  # shellcheck disable=SC2068
+  ${TIMEOUT_CMD[@]} py.test -vvv --cov=snowflake.connector \
+  --cov-report=xml:python_connector_${TRAVIS_PYTHON_VERSION}_coverage.xml \
+  -m "putget and not slow" test || ret=$?
 else
   echo "Running regular tests..."
+  # shellcheck disable=SC2068
   ${TIMEOUT_CMD[@]} py.test -vvv --cov=snowflake.connector \
   --cov-report=xml:python_connector_${TRAVIS_PYTHON_VERSION}_coverage.xml \
   test || ret=$?

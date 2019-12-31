@@ -22,8 +22,8 @@ except:
 
 logger = getLogger(__name__)
 
-# Mark every test in this module as an azure test
-pytestmark = pytest.mark.azure
+# Mark every test in this module as an azure and a putget test
+pytestmark = [pytest.mark.azure, pytest.mark.putget]
 
 
 @pytest.mark.skipif(
