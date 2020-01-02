@@ -8,8 +8,8 @@ import pytest
 from snowflake.connector.compat import PY2
 from snowflake.connector.telemetry import TelemetryField
 
-# Mark every test in this module as a slow test
-pytestmark = pytest.mark.slow
+# Mark every test in this module as a putget test
+pytestmark = pytest.mark.putget
 
 if PY2:
     from mock import Mock

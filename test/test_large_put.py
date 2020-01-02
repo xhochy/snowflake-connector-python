@@ -9,8 +9,8 @@ import pytest
 
 
 
-# Mark every test in this module as a slow test
-pytestmark = pytest.mark.slow
+# Mark every test in this module as a putget test
+pytestmark = pytest.mark.putget
 
 def test_put_copy_large_files(tmpdir, conn_cnx, db_parameters, test_files):
     """
