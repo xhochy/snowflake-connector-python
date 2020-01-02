@@ -19,13 +19,13 @@ if [ -n "$SNOWFLAKE_AZURE" ]; then
   # shellcheck disable=SC2068
   ${TIMEOUT_CMD[@]} py.test -vvv --cov=snowflake.connector \
   --cov-report=xml:python_connector_${TRAVIS_PYTHON_VERSION}_coverage.xml \
-  -m "putget and not slow" test || ret=$?
+  -m "putget" test || ret=$?
 elif [ -n "$SNOWFLAKE_GCP" ]; then
   echo "Running GCP tests only..."
   # shellcheck disable=SC2068
   ${TIMEOUT_CMD[@]} py.test -vvv --cov=snowflake.connector \
   --cov-report=xml:python_connector_${TRAVIS_PYTHON_VERSION}_coverage.xml \
-  -m "putget and not slow" test || ret=$?
+  -m "putget" test || ret=$?
 else
   echo "Running regular tests..."
   # shellcheck disable=SC2068
