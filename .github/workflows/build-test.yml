@@ -11,4 +11,9 @@ jobs:
         steps:
             - name: Build and Test Steps
               shell: bash
-              run: pwd && ls -l # ./scripts/run_github_workflow.sh
+              run: |
+                pwd
+                ls -l
+                ls -l ../
+                ls -l ../../
+                ls -l ../../../
