@@ -35,6 +35,7 @@ elif [ -n "$SNOWFLAKE_GCP" ]; then
 else
   echo "Running regular tests..."
   # shellcheck disable=SC2068
+  echo ${TIMEOUT_CMD[@]} py.test -vvv --cov=snowflake.connector --cov-report=xml:python_connector_${TRAVIS_PYTHON_VERSION}_coverage.xml ${TEST_GROUP_CMD[@]} test
   ${TIMEOUT_CMD[@]} py.test -vvv --cov=snowflake.connector \
   --cov-report=xml:python_connector_${TRAVIS_PYTHON_VERSION}_coverage.xml \
   ${TEST_GROUP_CMD[@]} \
