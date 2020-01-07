@@ -9,6 +9,6 @@ jobs:
             SNOWFLAKE_TEST_GROUP: 1
             SNOWFLAKE_TEST_GROUP_TOTAL: 2
         steps:
-            -name: Build and Test Steps
-             shell: bash
-             run: ./scripts/run_github_workflow.sh
+            - name: Build and Test Steps
+              shell: bash
+              run: ./scripts/run_github_workflow.sh
