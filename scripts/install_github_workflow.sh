@@ -19,6 +19,8 @@ else
     python -m virtualenv venv
 fi
 
+TRAVIS_PYTHON_VERSION=$(python -c 'import sys; print(".".join([str(c) for c in sys.version_info[0:2]]))')
+
 # TODO: decrypto credentials
 
 source ./venv/bin/activate
