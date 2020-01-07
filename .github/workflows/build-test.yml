@@ -1,0 +1,14 @@
+name: Build and Test
+
+on: push
+jobs:
+    build-test:
+        name: Build and Test Job
+        runs-on: ubuntu-16.04
+        env:
+            SNOWFLAKE_TEST_GROUP: 1
+            SNOWFLAKE_TEST_GROUP_TOTAL: 2
+        steps:
+            -name: Build and Test Steps
+             shell: bash
+             run: ./scripts/run_github_workflow.sh
