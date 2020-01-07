@@ -5,6 +5,10 @@ matrix:
   include:
   - os: linux
     python: '3.5'
+    env: SNOWFLAKE_TEST_GROUP=1 SNOWFLAKE_TEST_GROUP_TOTAL=2
+  - os: linux
+    python: '3.5'
+    env: SNOWFLAKE_TEST_GROUP=2 SNOWFLAKE_TEST_GROUP_TOTAL=2
   - os: linux
     python: '3.6'
   - os: linux

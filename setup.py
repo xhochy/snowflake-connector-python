@@ -238,6 +238,7 @@ setup(
             'pytest-cov',
             'pytest-rerunfailures',
             'pytest-timeout',
+            'pytest-test-groups',
             'coverage',
             'pexpect',
             'mock',
