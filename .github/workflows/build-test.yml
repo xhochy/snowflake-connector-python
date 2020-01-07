@@ -7,7 +7,7 @@ jobs:
         runs-on: ubuntu-16.04
         strategy:
             matrix:
-                python-version: [ '3.6.8' ]
+                python-version: [ '3.5.7', '3.6.9', '3.7.5' ]
         env:
             SNOWFLAKE_TEST_GROUP: 1
             SNOWFLAKE_TEST_GROUP_TOTAL: 2
