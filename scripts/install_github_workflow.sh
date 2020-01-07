@@ -6,6 +6,8 @@ set -o pipefail
 
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
+env | sort
+
 if [ "$TRAVIS_OS_NAME" == "osx" ]; then
     curl -O https://www.python.org/ftp/python/${PYTHON_VERSION}/python-${PYTHON_VERSION}-macosx10.9.pkg
     sudo installer -pkg python-${PYTHON_VERSION}-macosx10.9.pkg -target /
@@ -13,7 +15,6 @@ if [ "$TRAVIS_OS_NAME" == "osx" ]; then
     python3 --version
     python3 -m venv venv
 else
-    sudo apt-get update
     pip install -U virtualenv
     python -m virtualenv venv
 fi
