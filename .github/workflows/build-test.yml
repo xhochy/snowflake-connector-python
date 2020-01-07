@@ -18,6 +18,9 @@ jobs:
               with:
                 python-version: ${{ matrix.python-version }}
                 architecture: x64
+            - name: Setup Virtualenv
+              shell: bash
+              run: ./scripts/install_github_workflow.sh
             - name: Build and Test Steps
               shell: bash
               run: |
