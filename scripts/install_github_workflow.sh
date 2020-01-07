@@ -22,7 +22,7 @@ fi
 TRAVIS_PYTHON_VERSION=$(python -c 'import sys; print(".".join([str(c) for c in sys.version_info[0:2]]))')
 
 echo "another_secret=$another_secret"
-gpg --quiet --batch --yes --decrypt --passphrase="$PARAMETERS_SECRET" --output $THIS_DIR/../test/parameters.py $THIS_DIR/../.github/workflow/parameters_aws.py.gpg
+gpg --quiet --batch --yes --decrypt --passphrase="$PARAMETERS_SECRET" --output $THIS_DIR/../test/parameters.py $THIS_DIR/../.github/workflows/parameters_aws.py.gpg
 
 source ./venv/bin/activate
 
