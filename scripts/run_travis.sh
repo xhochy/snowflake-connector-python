@@ -15,7 +15,7 @@ fi
 
 TEST_GROUP=()
 if [[ -n "$SNOWFLAKE_TEST_GROUP" ]]; then
-    TEST_GROUP=("--test-group-random-seed=12345", "--test-group=$SNOWFLAKE_TEST_GROUP", "--test-group-count=$SNOWFLAKE_TEST_GROUP_TOTAL")
+    TEST_GROUP=("--test-group-random-seed=12345" "--test-group=$SNOWFLAKE_TEST_GROUP" "--test-group-count=$SNOWFLAKE_TEST_GROUP_TOTAL")
 fi
 source ./venv/bin/activate
 ret=0
