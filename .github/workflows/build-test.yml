@@ -8,9 +8,6 @@ jobs:
         strategy:
             matrix:
                 python-version: [ '3.5.7', '3.6.9', '3.7.5' ]
-        env:
-            SNOWFLAKE_TEST_GROUP: 1
-            SNOWFLAKE_TEST_GROUP_TOTAL: 2
         steps:
             - uses: actions/checkout@v1
             - name: Setup Python
@@ -18,11 +15,12 @@ jobs:
               with:
                 python-version: ${{ matrix.python-version }}
                 architecture: x64
-            - name: Setup Virtualenv
+            - name: Setup Virtualenv and Build
               shell: bash
-              env: # Or as an environment variable
+              env:
                 PARAMETERS_SECRET: ${{ secrets.PARAMETERS_SECRET }}
+                another_secret: ${{ secrets.another_secret }}
               run: ./scripts/install_github_workflow.sh
-            - name: Build and Test Steps
+            - name: Tests
               shell: bash
               run: ./scripts/run_github_workflow.sh
