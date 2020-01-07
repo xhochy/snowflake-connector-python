@@ -20,9 +20,9 @@ jobs:
                 architecture: x64
             - name: Setup Virtualenv
               shell: bash
+              env: # Or as an environment variable
+                PARAMETERS_SECRET: ${{ secrets.PARAMETERS_SECRET }}
               run: ./scripts/install_github_workflow.sh
             - name: Build and Test Steps
               shell: bash
-              run: |
-                ls -l
-                ./scripts/run_github_workflow.sh
+              run: ./scripts/run_github_workflow.sh

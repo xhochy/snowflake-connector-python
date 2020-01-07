@@ -6,7 +6,7 @@ set -o pipefail
 
 THIS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-env | sort
+env | grep -v SECRET | sort
 
 if [ "$TRAVIS_OS_NAME" == "osx" ]; then
     curl -O https://www.python.org/ftp/python/${PYTHON_VERSION}/python-${PYTHON_VERSION}-macosx10.9.pkg
@@ -21,7 +21,8 @@ fi
 
 TRAVIS_PYTHON_VERSION=$(python -c 'import sys; print(".".join([str(c) for c in sys.version_info[0:2]]))')
 
-# TODO: decrypto credentials
+echo "another_secret=$another_secret"
+gpg --quiet --batch --yes --decrypt --passphrase="$PARAMETERS_SECRET" --output $THIS_DIR/../test/parameters.py $THIS_DIR/../.github/workflow/parameters_aws.py.gpg
 
 source ./venv/bin/activate
 
