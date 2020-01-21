@@ -85,7 +85,7 @@ if isBuildExtEnabled == 'true':
             current_dir = os.getcwd()
 
             if ext.name == 'snowflake.connector.arrow_iterator':
-                self._copy_arrow_lib()
+                # self._copy_arrow_lib()
 
                 ext.sources += ['cpp/ArrowIterator/CArrowIterator.cpp',
                                 'cpp/ArrowIterator/CArrowChunkIterator.cpp',
