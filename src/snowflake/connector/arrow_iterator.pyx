@@ -11,6 +11,7 @@ from libcpp cimport bool as c_bool
 from libcpp.memory cimport shared_ptr
 from libcpp.string cimport string as c_string
 from libcpp.vector cimport vector
+from pyarrow import ArrowException
 from .errors import (Error, OperationalError, InterfaceError)
 from .errorcode import (ER_FAILED_TO_READ_ARROW_STREAM, ER_FAILED_TO_CONVERT_ROW_TO_PYTHON_TYPE)
 
@@ -78,13 +79,19 @@ cdef extern from "arrow/api.h" namespace "arrow" nogil:
     cdef cppclass CRecordBatchReader" arrow::RecordBatchReader":
         CStatus ReadNext(shared_ptr[CRecordBatch]* batch)
 
+    cdef cppclass CResult "arrow::Result"[T]:
+        CResult()
+        CResult(CStatus)
+        CResult(T)
+        c_bool ok()
+        CStatus status()
+        T operator*()
 
 cdef extern from "arrow/ipc/api.h" namespace "arrow::ipc" nogil:
     cdef cppclass CRecordBatchStreamReader \
             " arrow::ipc::RecordBatchStreamReader"(CRecordBatchReader):
         @staticmethod
-        CStatus Open(const InputStream* stream,
-                     shared_ptr[CRecordBatchReader]* out)
+        CResult[shared_ptr[CRecordBatchReader]] Open(const InputStream* stream)
 
 
 cdef extern from "arrow/io/api.h" namespace "arrow::io" nogil:
@@ -125,6 +132,8 @@ cdef extern from "arrow/python/api.h" namespace "arrow::py" nogil:
     cdef cppclass PyReadableFile(RandomAccessFile):
         PyReadableFile(object fo)
 
+    T GetResultValue[T](CResult[T]) except *
+
 
 cdef class EmptyPyArrowIterator:
 
@@ -154,17 +163,19 @@ cdef class PyArrowIterator(EmptyPyArrowIterator):
     def __cinit__(self, object cursor, object py_inputstream, object arrow_context, object use_dict_result,
                   object numpy):
         cdef shared_ptr[InputStream] input_stream
-        cdef shared_ptr[CRecordBatchReader] reader
         cdef shared_ptr[CRecordBatch] record_batch
+        cdef shared_ptr[CRecordBatchReader] reader
         input_stream.reset(new PyReadableFile(py_inputstream))
-        cdef CStatus ret = CRecordBatchStreamReader.Open(input_stream.get(), &reader)
-        if not ret.ok():
+        try:
+            reader = GetResultValue(
+                CRecordBatchStreamReader.Open(input_stream.get()))
+        except ArrowException as e:
             Error.errorhandler_wrapper(
                 cursor.connection,
                 cursor,
                 OperationalError,
                 {
-                    'msg': 'Failed to open arrow stream: ' + str(ret.message()),
+                    'msg': 'Failed to open arrow stream: ' + str(e.message()),
                     'errno': ER_FAILED_TO_READ_ARROW_STREAM
                 })
 

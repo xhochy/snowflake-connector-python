@@ -41,7 +41,7 @@ cmd_class = {}
 
 pandas_requirements = [
     # Must be kept in sync with pyproject.toml
-    'pyarrow>=0.17.0,<0.18.0',
+    'pyarrow>=1.0.0,<1.1.0',
     'pandas==0.24.2;python_version=="3.5"',
     'pandas>=1.0.0,<1.1.0;python_version>"3.5"',
 ]
@@ -73,21 +73,21 @@ if _ABLE_TO_COMPILE_EXTENSIONS:
         # this list should be carefully examined when pyarrow lib is
         # upgraded
         arrow_libs_to_copy = {
-            'linux': ['libarrow.so.17',
-                      'libarrow_python.so.17',
-                      'libarrow_flight.so.17'],
-            'darwin': ['libarrow.17.dylib',
-                       'libarrow_python.17.dylib'],
+            'linux': ['libarrow.so.100',
+                      'libarrow_python.so.100',
+                      'libarrow_flight.so.100'],
+            'darwin': ['libarrow.100.dylib',
+                       'libarrow_python.100.dylib'],
             'win32': ['arrow.dll',
                       'arrow_python.dll',
                       'zlib.dll']
         }
 
         arrow_libs_to_link = {
-            'linux': ['libarrow.so.17',
-                      'libarrow_python.so.17'],
-            'darwin': ['libarrow.17.dylib',
-                       'libarrow_python.17.dylib'],
+            'linux': ['libarrow.so.100',
+                      'libarrow_python.so.100'],
+            'darwin': ['libarrow.100.dylib',
+                       'libarrow_python.100.dylib'],
             'win32': ['arrow.lib',
                       'arrow_python.lib']
         }
@@ -96,7 +96,6 @@ if _ABLE_TO_COMPILE_EXTENSIONS:
             current_dir = os.getcwd()
 
             if ext.name == 'snowflake.connector.arrow_iterator':
-                self._copy_arrow_lib()
                 CPP_SRC_DIR = os.path.join(CONNECTOR_SRC_DIR, 'cpp')
                 ARROW_ITERATOR_SRC_DIR = os.path.join(CPP_SRC_DIR, 'ArrowIterator')
                 LOGGING_SRC_DIR = os.path.join(CPP_SRC_DIR, 'Logging')
@@ -127,8 +126,6 @@ if _ABLE_TO_COMPILE_EXTENSIONS:
                 elif platform == 'linux' or platform == 'darwin':
                     ext.extra_compile_args.append('-isystem' + pyarrow.get_include())
                     ext.extra_compile_args.append('-isystem' + numpy.get_include())
-                    ext.extra_compile_args.append('-std=c++11')
-                    ext.extra_compile_args.append('-D_GLIBCXX_USE_CXX11_ABI=0')
 
                 ext.library_dirs.append(os.path.join(current_dir, self.build_lib, 'snowflake', 'connector'))
                 ext.extra_link_args += self._get_arrow_lib_as_linker_input()
@@ -146,7 +143,7 @@ if _ABLE_TO_COMPILE_EXTENSIONS:
             build_ext.build_extension(self, ext)
 
         def _get_arrow_lib_dir(self):
-            return pyarrow.get_library_dirs()[0]
+            return os.path.join(os.environ['PREFIX'], 'lib')
 
         def _copy_arrow_lib(self):
             libs_to_bundle = self.arrow_libs_to_copy[sys.platform]

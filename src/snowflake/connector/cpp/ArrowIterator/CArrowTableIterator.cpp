@@ -162,18 +162,19 @@ arrow::Status CArrowTableIterator::replaceColumn(
 {
   // replace the targeted column
   std::shared_ptr<arrow::RecordBatch> currentBatch = (*m_cRecordBatches)[batchIdx];
-  arrow::Status ret = currentBatch->AddColumn(colIdx+1, newField, newColumn, &currentBatch);
+  arrow::Result<std::shared_ptr<arrow::RecordBatch>> ret = currentBatch->AddColumn(colIdx+1, newField, newColumn);
   if(!ret.ok())
   {
-    return ret;
+    return ret.status();
   }
-  ret = currentBatch->RemoveColumn(colIdx, &currentBatch);
+  currentBatch = *std::move(ret);
+  ret = currentBatch->RemoveColumn(colIdx);
   if(!ret.ok())
   {
-    return ret;
+    return ret.status();
   }
-  (*m_cRecordBatches)[batchIdx] = currentBatch;
-  return ret;
+  (*m_cRecordBatches)[batchIdx] = *std::move(ret);
+  return ret.status();
 }
 
 template <typename T>
@@ -815,10 +816,13 @@ bool CArrowTableIterator::convertRecordBatchesToTable()
   if (!m_cTable && !m_cRecordBatches->empty())
   {
     reconstructRecordBatches();
-    arrow::Status ret = arrow::Table::FromRecordBatches(*m_cRecordBatches, &m_cTable);
-    SF_CHECK_ARROW_RC_AND_RETURN(ret, false,
+    arrow::Result<std::shared_ptr<arrow::Table>> ret = arrow::Table::FromRecordBatches(*m_cRecordBatches);
+    arrow::Status status = ret.status();
+    SF_CHECK_ARROW_RC_AND_RETURN(status, false,
       "[Snowflake Exception] arrow failed to build table from batches, errorInfo: %s",
-      ret.message().c_str());
+      status.message().c_str());
+
+    m_cTable = *std::move(ret);
 
     return true;
   }
